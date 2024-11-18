@@ -1,0 +1,379 @@
+1. Type script nima ? - Type script qat'iy typelar bilan ishlovchi JavaScript asosida yaratilgan   dasturlash tili .
+2. Tsconfig.json faylidan "sourceMap" ni (true) yoqish bizga typescript filedagi  xatoni nechanchi qatordan chiqayotganini aniq ko'rishga imkon beradi !
+3. "Any" - bu type type checking ni o'chirib qo'aydi shuning uchun bu typeda ochilgan o'zgaruvchiga  har qanday typeda qiymat berishimiz mumkin.
+4. Type scriptda Funksiya parametrlariga ham type beriladi.Funksiyadan qaytadigan qiymatni typeni ham berishimiz kerak bo'ladi !
+5. Type scriptda funksiyalar 2 turga bo'linadi qaiymat qayataradigan va qiymat qaytarmaydigan(void)!
+6. Type Scriptda Error qayataradigan funksiyalar ham mavjud ularga  : never - qiymati beriladi 
+7. Signature Function - funksiyaning parametrlari va U qaytaradigan qiymat typeni belgilash uchun ishlatiladi ! Masalan:
+
++++++++++++++++++++++++FUNCTION SIGNATURE START++++++++++++++++++++++++++++++
+
+// Signature yaratish :
+let qoshish: (a: number, b: number) => number;
+
+// Funksiya yaratish va tayinlash:
+qoshish = (a, b) => {
+    return a + b;
+}
+console.log(qoshish(5, 3)); // chiqadi:  8
+----------------------------------------------------------------
+Ko‘p turdagi parametrli signature:
+
+Agar funksiyaning har xil turlarni qaytaruvchi bir nechta varianti bo‘lsa, overloaded function signature deb ataladigan
+usuldan foydalanamiz. Bunda funksiya bir nechta signature'ga ega bo'lishi mumkin.  masalan:
+
+// Overloaded Signature:
+function getInfo(x: number): number;
+function getInfo(x: string): string;
+
+// Asosiy funksiya:
+function getInfo(x: any): any {
+    if (typeof x === 'number') {
+        return x * x; // Agar son bo'lsa, kvadratini qaytaradi
+    } else {
+        return `Salom, ${x}`; // Agar matn bo'lsa, salomlashish matnini qaytaradi
+    }
+}
+
+console.log(getInfo(4));      // 16
+console.log(getInfo("Odam")); // "Salom, Odam"
+
+------------------------------------------------------------------
+
+Function Signature bilan Type Aliases
+TypeScript’da function signature’larni yanada qulayroq ishlatish uchun type aliaslardan foydalanishimiz mumkin. masalan:
+
+// Signature turini aniqlash:
+type Hisobla = (a: number, b: number) => number;
+
+// Hisobla turidagi funksiya yaratish:
+const kopaytir: Hisobla = (a, b) => a * b;
+
+console.log(kopaytir(6, 4)); //javob: 24
+
+
+++++++++++++++++++++++++FINISH FUNCTION SIGNATUR++++++++++++++++++++++++++++++++++++
+
+8. Type inference -  biz type scriptda o'zgaruvchiga type bermasak ham , avtomatik typeScript tomonidan type biriktirilishi 
+9. Type annotation - bu o'zgaruvchilarga shaxs tomonidan type berilishi 
+
+
+10. Type Assertion - 2ta turi mavjud : Angle Bracket va "as" masalan:      let str:any = "Salom hammaga"
+                                                                           let len:number = (<string>str).length
+
+
+11. Type Assertin bizga dom dan elementni Ts ga olganimizda null qaytishi mumkin ekan shuni oldini olish uchun qanday qiymat ekanini belgilab ketish
+uchun ishlatilinar ekan .Malum bir qiymatni aniq bir turga o'tkzaish uchun ishaltilinar ekan ! Dom elementlarini olishda ham ishlatiladi !
+
+12. Double Assertion - bu ham huddi type assertion singari ishlatilinar ekan faqat dom dan bir necha xil qiymat kelib qolishi mumkin deb belgilab ketishii
+miz mumkin ekan! masalan: 
+
+13. Unknown - bu o'zgaruvchiga har qanday qiymat biriktirish imkonini beradi."any" ga nisbatan  xavfsizroq sababi
+shu o'zgaruchi bilan ishlashdan avval type chechking qiladi . Agar kiritilgan malumot number bo'lsa faqat number methodlarini ishlatishni talab qiladi
+
+14 . any - bu ham o'zgaruvchiga har qanday typeni biriktirish imkonini yaratadi . Lekin Xavfsiz emas Kiritilgan malumot number bo'lsa ham unda
+string methodini ishlatib ketsangiz xatolik ko'rsatmaydi va keyinchalik dasturda xatolik chiqishi mumkin !
+
+15. Union type -- bir o'zgaruvchiga bir necha xil type dagi malumotni biriktirish imkonini beradi.masalan: let qiymat: string | number;
+Union type arrayda : let array: (string | number)[] = ["Salom", 42, "Dunyo"]; - shu ko'rinishda foydalanish mumkn ekan !
+
+16.literal types: 
+Literal type yordamida o‘zgaruvchiga faqat aniq bir qiymatlarni berish mumkin.
+ Masalan, bir nechta qabul qilinadigan qiymatlarni ko‘rsatish kerak bo‘lganda ishlatiladi:
+
+let yoqimliRang: "qizil" | "yashil" | "ko‘k";
+yoqimliRang = "qizil"; // To'g'ri
+yoqimliRang = "oq";    // Xato
+
+
+17. Type Alises :
+Type alias yordamida turli turdagi ma'lumotlar uchun yangi nom berish mumkin. Bu kodni o‘qilishi va foydalanishni qulay qiladi.
+
+type ID = string | number;
+let userID: ID = "1234"; // To'g'ri
+userID = 5678;           // To'g'ri
+
+18. Optional properties:
+Optional properties obyektda ixtiyoriy xususiyatlarni belgilash imkonini beradi (? orqali). Xususiyat kiritilmasa ham xato chiqmaydi.
+
+interface User {
+    name: string;
+    age?: number; // age optional
+}
+
+const user1: User = { name: "Ali" };           // To'g'ri
+const user2: User = { name: "Ali", age: 25 };  // To'g'ri
+
+19.Readonly = Readonly bilan belgilanadigan xususiyatlar faqat o‘qilishi mumkin, lekin o‘zgartirishga ruxsat berilmaydi.
+
+interface Point {
+    readonly x: number;
+    readonly y: number;
+}
+
+const point: Point = { x: 10, y: 20 };
+point.x = 15; // Xato, xususiyatni o‘zgartirish mumkin emas
+
+
+20.in operatori
+in operatori obyekt ichida aniq bir xususiyat bor-yo‘qligini tekshirish uchun ishlatiladi.
+
+interface User {
+    name: string;
+    age?: number;
+}
+
+let user: User = { name: "Ali" };
+console.log("age" in user); // False, age yo‘q
+
+21.Assigning Types to Arrays
+Massiv ichidagi elementlar uchun ma’lum bir turni belgilash mumkin. Bu massivga faqat aniq turdagi qiymatlarni kiritishni ta’minlaydi.
+
+Oddiy massiv:
+let names: string[] = ["Ali", "Vali"];
+
+Union type bilan massiv:
+let values: (string | number)[] = ["Ali", 42];
+
+
+22.Enum
+enum — qiymatlar ro‘yxatini nom bilan ifodalash imkonini beradi. enum yordamida o‘zgaruvchiga 
+faqat ma'lum bir qiymatlarni o‘rnatish mumkin, bu esa kodni tushunarli va tartibli qiladi.
+
+enum Ranglar {
+    Qizil = "qizil",
+    Yashil = "yashil",
+    Ko'k = "ko'k"
+}
+
+let rang: Ranglar = Ranglar.Qizil; // To‘g‘ri
+rang = "qora";                     // Xato, enumda yo'q qiymat
+enum TypeScriptda ko‘p ishlatiladigan struktura bo‘lib, u bilan bog‘liq qiymatlarni oson boshqarish mumkin.
+
+
+
+23.Object
+TypeScript’da obyektlarni aniqroq tasvirlash uchun interface va type yordamida tur yaratish mumkin.
+
+interface User {
+    name: string;
+    age: number;
+    isActive: boolean;
+}
+
+const user: User = {
+    name: "Ali",
+    age: 25,
+    isActive: true
+};
+
+
+24. Array
+TypeScript’da massivlar uchun elementlar turini belgilash mumkin. Bu massiv ichida faqat o‘sha turdagi elementlar bo‘lishini ta’minlaydi.
+
+Oddiy massiv:
+let names: string[] = ["Ali", "Vali"];
+
+Union type bilan massiv:
+let values: (string | number)[] = ["Ali", 42];
+
+25. Tuple
+Tuple turida massiv elementlari uchun aniq bir tur va tartib beriladi, ya’ni qaysi element qaysi turda bo‘lishi kerakligi belgilanadi.
+
+let user: [string, number, boolean] = ["Ali", 25, true];
+Bu massivda faqat birinchi qiymat string, ikkinchisi number, va uchinchisi boolean bo'lishi kerak.
+
+
+
+26.Never
+never qiymat qaytarmaydigan yoki hech qachon tugamaydigan funksiyalar uchun ishlatiladi. Odatda throw qiladigan yoki cheksiz aylanishda bo‘ladigan funksiyalarda ishlatiladi.
+
+function xatoThrow(): never {
+    throw new Error("Xatolik yuz berdi");
+}
+
+27. Type Alias’ni yaratish
+Type alias’ni type kalit so‘zi bilan e’lon qilish mumkin. Type alias oddiy turlar, massivlar, obyektlar va boshqa turlar uchun qo‘llaniladi.
+
+Misollar:
+Oddiy Turlar uchun:
+
+type ID = string | number;
+
+let userId: ID = "12345"; // To‘g‘ri
+userId = 67890;           // To‘g‘ri
+
+
+
+Obyekt Turlari uchun:
+
+type User = {
+    name: string;
+    age: number;
+    isActive: boolean;
+};
+
+const user: User = {
+    name: "Ali",
+    age: 25,
+    isActive: true
+};
+
+
+Massiv Turlari uchun:
+
+type NameArray = string[];
+
+let names: NameArray = ["Ali", "Vali", "Guli"];
+
+
+Funksiya Turlari uchun:
+
+type Greet = (name: string) => string;
+
+const greet: Greet = (name) => `Salom, ${name}!`;
+
+
+
+
+28. Union Types
+Union types bir o‘zgaruvchiga bir nechta turdagi qiymatlarni olishga ruxsat beradi.
+ Bu orqali turli xil qiymatlarni moslashuvchan tarzda qabul qilish mumkin.
+
+let id: string | number; // id faqat string yoki number bo‘lishi mumkin
+id = "123"; // To‘g‘ri
+id = 456;   // To‘g‘ri
+id = true;  // Xato, faqat string yoki number bo‘lishi kerak
+Union types yordamida o‘zgaruvchi bir necha turdagi qiymatni qabul qilsa ham, 
+TypeScript hali ham turlarni nazorat qiladi va xatolarni ushlaydi.
+
+
+29.Type Assertions
+Type assertions bir turdagi o‘zgaruvchini boshqasiga “ishonch bilan” aylantirish imkonini beradi. 
+Bu ko‘pincha ma’lum bir tur aniq ekanligini bildirganda ishlatiladi. Type assertions ikkita usulda yoziladi: <Type> yoki as Type.
+
+let value: any = "Hello, World!";
+let stringLength: number = (value as string).length; // yoki: <string>value.length
+
+console.log(stringLength); // To‘g‘ri, chunki value hozir string sifatida qabul qilinmoqda
+Type assertion TypeScript’ga ma’lum bir qiymat qanday turda ekanligini bildiradi va shuning asosida tekshirishni o‘chiradi.
+
+
+30. Unknown Types
+unknown turi o‘zgaruvchining turini oldindan bilmasdan saqlash uchun ishlatiladi. 
+Bu any turiga o‘xshash, lekin undan xavfsizroq: unknown turidagi o‘zgaruvchidan 
+foydalanishdan oldin uning turini tekshirish talab qilinadi.
+
+let data: unknown;
+
+data = "Hello";        // To‘g‘ri
+data = 42;             // To‘g‘ri
+data = true;           // To‘g‘ri
+
+if (typeof data === "string") {
+    console.log(data.toUpperCase()); // To‘g‘ri, chunki data string ekanligi tekshirildi
+}
+unknown xavfsiz tur bo‘lib, dasturchini aniqroq tekshiruvlar o‘tkazishga undaydi va bu orqali kutilmagan xatolarning oldi olinadi.
+
+Bu turlar TypeScript’da tur xavfsizligini oshirish, kodni tushunarli va moslashuvchan qilishga yordam beradi.
+
+
+
+
+31.Namespaces
+Namespaces TypeScript’da kodni guruhlash va o‘zaro bog‘liq funksiyalar,
+ interfeyslar yoki sinflarni bir joyga to‘plash uchun ishlatiladi. Bu kodni modularlashtirishda 
+ yordam beradi va katta loyihalarda nomlar to‘qnashuvini oldini oladi.
+
+namespace MyMath {
+    export function add(x: number, y: number): number {
+        return x + y;
+    }
+}
+
+console.log(MyMath.add(2, 3)); // 5
+namespace ichidagi funksiyalar yoki o‘zgaruvchilarni tashqaridan ishlatish uchun export kalit so‘zi bilan belgilash kerak.
+
+
+32.  Generics
+Generics funksiyalar, sinflar, yoki interfeyslarga turli turlar bilan ishlash imkonini beradi. 
+Bu kodni qayta foydalanishga va moslashuvchanlikka imkon yaratadi, chunki generics orqali turga bog‘liq bo‘lmagan umumiy kod yozish mumkin.
+
+function identity<T>(value: T): T {
+    return value;
+}
+
+console.log(identity<string>("Hello")); // "Hello"
+console.log(identity<number>(123));     // 123
+Bu misolda T generik turi sifatida ishlatilgan va u funksiyaga kiritilgan tur bo‘yicha avtomatik ravishda aniqlanadi.
+
+
+33. Utility Types
+Utility Types — bu TypeScript’da mavjud bo‘lgan tayyor yordamchi turlar bo‘lib, ular mavjud turlarni
+qayta ishlash va yangicha turlar yaratishda qulaylik yaratadi. Eng ko‘p ishlatiladigan utility turlardan ba’zilari:
+
+Partial<T>: Barcha xususiyatlarni majburiy bo‘lmagan qilib beradi.
+
+interface User {
+    name: string;
+    age: number;
+}
+
+const user: Partial<User> = { name: "Ali" }; // age bo'lmasa ham bo'ladi
+Readonly<T>: Barcha xususiyatlarni faqat o‘qish mumkin bo‘lgan qilib beradi.
+
+const user: Readonly<User> = { name: "Ali", age: 30 };
+user.age = 31; // Xato, readonly
+Pick<T, K>: Berilgan T turidan faqat K xususiyatlarini tanlaydi.
+
+const partialUser: Pick<User, "name"> = { name: "Ali" };
+Record<K, T>: Berilgan kalitlar to‘plamidan yangi tur yaratadi, ularning qiymati T turida bo‘ladi.
+
+const data: Record<string, number> = { "foo": 42, "bar": 36 };
+
+34. BigInt
+BigInt katta sonlarni ifodalash uchun qo‘llaniladi va u TypeScript’da number
+ tipidan kattaroq qiymatlar bilan ishlash imkonini beradi. Bu ayniqsa 2^53-1 yoki
+  undan katta butun sonlar bilan ishlashda foydali. BigInt qiymatini n qo‘shimchasi yoki BigInt funksiyasi orqali yaratish mumkin.
+
+let largeNumber: bigint = 9007199254740991n;
+let anotherBigInt = BigInt(9007199254740992);
+
+console.log(largeNumber + anotherBigInt); // To‘g‘ri ishlaydi
+
+
+35.  Nullish Coalescing Assignment (??=)
+Nullish Coalescing Assignment (??=) operatori null yoki undefined bo‘lgan qiymatlarni 
+avtomatik ravishda boshqa qiymatga o‘zgartirish uchun ishlatiladi. Bu, agar qiymat null yoki undefined bo‘lsa,
+ unga ma’lum bir standart qiymatni berish imkonini beradi.
+
+let myValue: string | null = null;
+myValue ??= "default"; // myValue endi "default" bo‘ladi
+
+console.log(myValue); // "default"
+
+
+
+36. TS Configuration
+TypeScript konfiguratsiya fayli (tsconfig.json) orqali loyihangizdagi sozlamalarni o‘rnatish mumkin. 
+Bu faylda kompilyator parametrlarini va qayerdan fayllarni o‘qish kerakligini aniqlash mumkin.
+
+Asosiy parametrlar:
+
+target: JavaScript versiyasi (masalan, ES5, ES6)ni tanlash.
+module: Qanday modul tizimidan foydalanishni belgilash (commonjs, es6, va boshqalar).
+strict: TypeScript’ni qat’iy rejimga o‘tkazadi, xatolarni yanada qat’iy tekshiradi.
+include / exclude: Loyihada qaysi fayllarni kiritish yoki kiritmaslikni aniqlash.
+Misol uchun, tsconfig.json fayli:
+
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "commonjs",
+    "strict": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
+}
+Bu sozlamalar TypeScript loyihasining qanday kompilyatsiya qilinishini boshqaradi 
+va kodni kompilyatsiyalashda aniqroq sozlamalar o‘rnatadi. 
